@@ -6,7 +6,6 @@ module Q1
     [
       File
         .readlines(filename)
-        .lazy
         .map(&:to_i)
         .each_cons(window)
         .map(&:sum)
