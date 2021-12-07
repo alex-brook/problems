@@ -2,38 +2,35 @@ require 'minitest/autorun'
 
 module Submarine
   def move(filename)
-    move = File
-           .readlines(filename)
-           .group_by { |order| order.split[0] } # Group by direction
-           .transform_keys(&:to_sym)
-           .transform_values { |orders| orders.map { |order| order.split[1].to_i }.sum }
+    move =
+      File
+        .readlines(filename)
+        .group_by { |order| order.split[0] }
+        .transform_keys(&:to_sym)
+        .transform_values { |orders| orders.map { |order| order.split[1].to_i }.sum }
 
     move[:forward] * (move[:down] - move[:up])
   end
 
   def move_with_aim(filename)
-    (_aim, depth, dist) =
+    _aim, depth, dist =
       File
-      .readlines(filename)
-      .map(&:split)
-      .map { |order| [order.first.to_sym, order.last.to_i] }
-      .reduce([0, 0, 0]) do |(aim, depth, dist), (direction, amount)|
-        case direction
-        when :forward
-          [aim, depth + (aim * amount), dist + amount]
-        when :up
-          [aim - amount, depth, dist]
-        when :down
-          [aim + amount, depth, dist]
+        .readlines(filename)
+        .map(&:split)
+        .map { |order| [order.first.to_sym, order.last.to_i] }
+        .reduce([0, 0, 0]) do |(aim, depth, dist), (direction, amount)|
+          case direction
+          when :forward
+            [aim, depth + (aim * amount), dist + amount]
+          when :up
+            [aim - amount, depth, dist]
+          when :down
+            [aim + amount, depth, dist]
+          end
         end
-      end
 
     dist * depth
   end
-
-  private
-
-  def grouped_orders(filename); end
 end
 
 class SubmarineTest < Minitest::Test
