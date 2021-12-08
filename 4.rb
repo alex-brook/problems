@@ -1,21 +1,25 @@
 require 'minitest/autorun'
+require 'set'
 
 class Bingo
   BOARD_SIZE = 5
 
-  def play
-    @cards.each do |card|
-      @boards.each do |(lookdown, lookup)|
-        next unless lookdown.key? card
-
-        lookup.delete(lookdown[card])
-        lookdown.delete(card)
-      end
-
+  def play_p1
+    play do |card|
       # Are there any winners?
-      winners = @boards.filter { |board| winner?(board) }
+      winner = @boards.find { |board| winner?(board) }
 
-      break winners.first.first.keys.sum * card if winners.any?
+      return winner.first.keys.sum * card if winner
+    end
+  end
+
+  def play_p2
+    non_winners = @boards
+
+    play do |card|
+      return non_winners.first.first.keys.sum * card if non_winners.one? && winner?(non_winners.first)
+
+      non_winners = @boards.filter { |board| !winner?(board) }
     end
   end
 
@@ -32,6 +36,19 @@ class Bingo
   end
 
   private
+
+  def play
+    @cards.each do |card|
+      @boards.each do |(lookdown, lookup)|
+        next unless lookdown.key? card
+
+        lookup.delete(lookdown[card])
+        lookdown.delete(card)
+      end
+
+      yield(card)
+    end
+  end
 
   def winner?(board)
     _lookdown, lookup = board
@@ -80,6 +97,12 @@ class BingoTest < Minitest::Test
   end
 
   def test_p1
-    assert_equal 4512, @game.load('4/example.txt').play
+    assert_equal 4512, @game.load('4/example.txt').play_p1
+    assert_equal 55_770, @game.load('4/input.txt').play_p1
+  end
+
+  def test_p2
+    assert_equal 1924, @game.load('4/example.txt').play_p2
+    assert_equal 2980, @game.load('4/input.txt').play_p2
   end
 end
