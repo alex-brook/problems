@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'minitest/autorun'
 require 'set'
 
@@ -17,17 +19,16 @@ class Bingo
     non_winners = @boards
 
     play do |card|
-      return non_winners.first.first.keys.sum * card if non_winners.one? && winner?(non_winners.first)
+      if non_winners.one? && winner?(non_winners.first)
+        return non_winners.first.first.keys.sum * card
+      end
 
       non_winners = @boards.filter { |board| !winner?(board) }
     end
   end
 
   def load(filename)
-    lines = File
-            .readlines(filename)
-            .map(&:strip)
-            .filter { |line| !line.empty? }
+    lines = File.readlines(filename).map(&:strip).filter { |line| !line.empty? }
 
     @cards = load_cards(lines)
     @boards = load_boards(lines)
@@ -52,15 +53,11 @@ class Bingo
 
   def winner?(board)
     _lookdown, lookup = board
-    potential_winning_lines.any? do |line|
-      line.none? { |l| lookup.key? l }
-    end
+    potential_winning_lines.any? { |line| line.none? { |l| lookup.key? l } }
   end
 
   def potential_winning_lines
-    coords = (0...BOARD_SIZE)
-             .to_a
-             .repeated_permutation(2)
+    coords = (0...BOARD_SIZE).to_a.repeated_permutation(2)
 
     [
       *coords.sort.chunk(&:first).map(&:last),
@@ -69,10 +66,7 @@ class Bingo
   end
 
   def load_cards(lines)
-    lines
-      .first
-      .split(',')
-      .map(&:to_i)
+    lines.first.split(',').map(&:to_i)
   end
 
   def load_boards(lines)
@@ -80,14 +74,15 @@ class Bingo
       .each_slice(BOARD_SIZE)
       .map { |board| board.map { |row| row.split.map(&:to_i) } }
       .map do |board|
-      lookup = (0...BOARD_SIZE)
-               .to_a
-               .repeated_permutation(2)
-               .map { |(row, col)| [[row, col], board[row][col]] }
-               .to_h
+        lookup =
+          (0...BOARD_SIZE)
+            .to_a
+            .repeated_permutation(2)
+            .map { |(row, col)| [[row, col], board[row][col]] }
+            .to_h
 
-      [lookup.to_a.map(&:reverse).to_h, lookup]
-    end
+        [lookup.to_a.map(&:reverse).to_h, lookup]
+      end
   end
 end
 

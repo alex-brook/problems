@@ -1,31 +1,23 @@
+# frozen_string_literal: true
+
 require 'minitest/autorun'
 
 module LaternFish
   def simulate(filename, days)
     counter = Counter.new(filename)
 
-    days.times do
-      counter.step
-    end
+    days.times { counter.step }
 
     counter.total
   end
 
   class Counter
     def initialize(filename)
-      start = File
-              .readlines(filename)
-              .first
-              .strip
-              .split(',')
-              .map(&:to_i)
-              .tally
+      start = File.readlines(filename).first.strip.split(',').map(&:to_i).tally
 
       @state = (0..8).to_h { |n| [n, [0, 0]] }
 
-      start.each do |k, v|
-        @state[k][1] += v
-      end
+      start.each { |k, v| @state[k][1] += v }
     end
 
     def step

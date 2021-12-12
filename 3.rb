@@ -1,22 +1,21 @@
+# frozen_string_literal: true
+
 require 'minitest/autorun'
 
 module GammaEpsilon
   def read(filename)
-    File
-      .readlines(filename)
-      .map(&:strip)
+    File.readlines(filename).map(&:strip)
   end
 
   def power_consumption(filename)
-    gamma = read(filename)
-            .then { |nums| (0...nums.first.length).map { |pos| mcb(nums, pos) } }
+    gamma =
+      read(filename).then do |nums|
+        (0...nums.first.length).map { |pos| mcb(nums, pos) }
+      end
 
     epsilon = gamma.map { |x| x == '1' ? '0' : '1' }
 
-    [gamma, epsilon]
-      .map(&:join)
-      .map { |x| x.to_i(2) }
-      .reduce(:*)
+    [gamma, epsilon].map(&:join).map { |x| x.to_i(2) }.reduce(:*)
   end
 
   def life_support_rating(filename)
@@ -33,7 +32,11 @@ module GammaEpsilon
   def filter_until_one(nums, index = 0, &blk)
     return nums.first if nums.one?
 
-    filter_until_one(nums.filter { |num| num[index] == blk.call(nums, index) }, index + 1, &blk)
+    filter_until_one(
+      nums.filter { |num| num[index] == blk.call(nums, index) },
+      index + 1,
+      &blk
+    )
   end
 
   def until_one(nums, index = 0, &blk)

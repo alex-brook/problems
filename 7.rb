@@ -1,14 +1,10 @@
+# frozen_string_literal: true
+
 require 'minitest/autorun'
 
 module Submarines
   def load(filename)
-    File
-      .readlines(filename)
-      .first
-      .strip
-      .split(',')
-      .map(&:to_i)
-      .sort
+    File.readlines(filename).first.strip.split(',').map(&:to_i).sort
   end
 
   def align(filename)
@@ -22,7 +18,9 @@ module Submarines
   def align2(filename)
     subs = load(filename)
 
-    (0...subs.length).map { |meet_index| subs.map { |sub| dist(sub, meet_index) }.sum }.min
+    (0...subs.length).map do |meet_index|
+      subs.map { |sub| dist(sub, meet_index) }.sum
+    end.min
   end
 
   def dist(a, b)

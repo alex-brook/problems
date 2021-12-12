@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'minitest/autorun'
 
 module Submarine
@@ -7,7 +9,9 @@ module Submarine
         .readlines(filename)
         .group_by { |order| order.split[0] }
         .transform_keys(&:to_sym)
-        .transform_values { |orders| orders.map { |order| order.split[1].to_i }.sum }
+        .transform_values do |orders|
+          orders.map { |order| order.split[1].to_i }.sum
+        end
 
     move[:forward] * (move[:down] - move[:up])
   end
