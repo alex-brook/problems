@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'minitest/autorun'
-require 'set'
+require "minitest/autorun"
+require "set"
 
 class Bingo
   BOARD_SIZE = 5
@@ -61,12 +61,12 @@ class Bingo
 
     [
       *coords.sort.chunk(&:first).map(&:last),
-      *coords.sort_by { |(row, col)| [col, row] }.chunk(&:last).map(&:last)
+      *coords.sort_by { |(row, col)| [col, row] }.chunk(&:last).map(&:last),
     ]
   end
 
   def load_cards(lines)
-    lines.first.split(',').map(&:to_i)
+    lines.first.split(",").map(&:to_i)
   end
 
   def load_boards(lines)
@@ -74,15 +74,15 @@ class Bingo
       .each_slice(BOARD_SIZE)
       .map { |board| board.map { |row| row.split.map(&:to_i) } }
       .map do |board|
-        lookup =
-          (0...BOARD_SIZE)
-            .to_a
-            .repeated_permutation(2)
-            .map { |(row, col)| [[row, col], board[row][col]] }
-            .to_h
+      lookup =
+        (0...BOARD_SIZE)
+          .to_a
+          .repeated_permutation(2)
+          .map { |(row, col)| [[row, col], board[row][col]] }
+          .to_h
 
-        [lookup.to_a.map(&:reverse).to_h, lookup]
-      end
+      [lookup.to_a.map(&:reverse).to_h, lookup]
+    end
   end
 end
 
@@ -92,12 +92,12 @@ class BingoTest < Minitest::Test
   end
 
   def test_p1
-    assert_equal 4512, @game.load('4/example.txt').play_p1
-    assert_equal 55_770, @game.load('4/input.txt').play_p1
+    assert_equal 4512, @game.load("4/example.txt").play_p1
+    assert_equal 55_770, @game.load("4/input.txt").play_p1
   end
 
   def test_p2
-    assert_equal 1924, @game.load('4/example.txt').play_p2
-    assert_equal 2980, @game.load('4/input.txt').play_p2
+    assert_equal 1924, @game.load("4/example.txt").play_p2
+    assert_equal 2980, @game.load("4/input.txt").play_p2
   end
 end

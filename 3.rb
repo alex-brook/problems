@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'minitest/autorun'
+require "minitest/autorun"
 
 module GammaEpsilon
   def read(filename)
@@ -13,7 +13,7 @@ module GammaEpsilon
         (0...nums.first.length).map { |pos| mcb(nums, pos) }
       end
 
-    epsilon = gamma.map { |x| x == '1' ? '0' : '1' }
+    epsilon = gamma.map { |x| x == "1" ? "0" : "1" }
 
     [gamma, epsilon].map(&:join).map { |x| x.to_i(2) }.reduce(:*)
   end
@@ -55,7 +55,7 @@ module GammaEpsilon
   end
 
   def lcb(nums, pos)
-    mcb(nums, pos) == '1' ? '0' : '1'
+    mcb(nums, pos) == "1" ? "0" : "1"
   end
 end
 
@@ -63,12 +63,12 @@ class GammaEpsilonTest < Minitest::Test
   include GammaEpsilon
 
   def test_p1
-    assert_equal 198, power_consumption('3/example.txt')
-    assert_equal 3_813_416, power_consumption('3/input.txt')
+    assert_equal 198, power_consumption("3/example.txt")
+    assert_equal 3_813_416, power_consumption("3/input.txt")
   end
 
   def test_p2
-    assert_equal 230, life_support_rating('3/example.txt')
-    assert_equal 0, life_support_rating('3/input.txt')
+    assert_equal 230, life_support_rating("3/example.txt")
+    assert_equal 0, life_support_rating("3/input.txt")
   end
 end

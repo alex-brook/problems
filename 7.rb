@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'minitest/autorun'
+require "minitest/autorun"
 
 module Submarines
   def load(filename)
-    File.readlines(filename).first.strip.split(',').map(&:to_i).sort
+    File.readlines(filename).first.strip.split(",").map(&:to_i).sort
   end
 
   def align(filename)
@@ -36,12 +36,12 @@ class SubmarinesTest < Minitest::Test
   include Submarines
 
   def test_p1
-    assert_equal 37, align('7/example.txt')
-    assert_equal 344_605, align('7/input.txt')
+    assert_equal 37, align("7/example.txt")
+    assert_equal 344_605, align("7/input.txt")
   end
 
   def test_p2
-    assert_equal 168, align2('7/example.txt')
-    assert_equal 93_699_985, align2('7/input.txt')
+    assert_equal 168, align2("7/example.txt")
+    assert_equal 93_699_985, align2("7/input.txt")
   end
 end

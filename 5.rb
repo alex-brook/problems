@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'minitest/autorun'
+require "minitest/autorun"
 
 module Vents
   def num_crosses(filename, _criteria = nil)
     lines =
       File
         .readlines(filename)
-        .map { |line| line.gsub(/\A*->\A*|,/, ' ').split }
+        .map { |line| line.gsub(/\A*->\A*|,/, " ").split }
         .map { |line| line.map(&:to_i) }
         .map { |line| Line.new(*line) }
         .map(&:points)
@@ -49,7 +49,7 @@ class VentsTest < Minitest::Test
   end
 
   def test_p2
-    assert_equal 12, num_crosses('5/example.txt', %i[diagonal?])
-    assert_equal 12, num_crosses('5/input.txt', %i[diagonal?])
+    assert_equal 12, num_crosses("5/example.txt", %i[diagonal?])
+    assert_equal 12, num_crosses("5/input.txt", %i[diagonal?])
   end
 end
