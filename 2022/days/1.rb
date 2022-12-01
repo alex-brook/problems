@@ -5,7 +5,7 @@ class DayOne < Day
     File
       .foreach(filename)
       .chunk_while { _1 != "\n" }
-      .map { _1.map(&:to_i).sum }
+      .map { _1.sum(&:to_i) }
       .max(n)
       .sum
   end
