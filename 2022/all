@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require_relative "spec_helper"
+Dir.glob("days/*.rb").each { require_relative _1 }
