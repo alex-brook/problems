@@ -41,5 +41,5 @@ class DayThree < Day
   it { expect(solve("days/3_input.txt")).to eq 8085 }
 
   it { expect(solve_part_two("days/3_example.txt", 3)).to eq 70 }
-  it { expect(solve_part_two("days/3_input.txt", 3)).to eq 0 }
+  it { expect(solve_part_two("days/3_input.txt", 3)).to eq 2515 }
 end
