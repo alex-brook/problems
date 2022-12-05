@@ -15,20 +15,19 @@ class DayFive < Day
               .tr("[] ", "")
               .chars
           end
-          # flip the indexes around
-          .then do |slices|
-            size = slices.first.length
-            slices.reduce(size.times.map { [] }) do |acc, slice|
-              slice
-                .each
-                .with_index do |character, index|
-                  acc[index].push character unless character == "-"
-                end
+          # flip the indexes
+          .reduce(nil) do |acc, slice|
+            acc = slice.length.times.map { [] } if acc.nil?
 
-              acc
-            end
-            .map(&:reverse)
+            slice
+              .each
+              .with_index do |character, index|
+                acc[index].push character unless character == "-"
+              end
+
+            acc
           end
+          .map(&:reverse)
 
           # apply the instructions
           instructions.reduce(stacks) do |acc, instruction|
@@ -49,9 +48,9 @@ class DayFive < Day
       end
   end
 
-  it { expect(solve("5_example.txt")).to eq "CMZ" }
-  it { expect(solve("5_input.txt")).to eq "FWSHSPJWM" }
+  it { expect(solve("days/5_example.txt")).to eq "CMZ" }
+  it { expect(solve("days/5_input.txt")).to eq "FWSHSPJWM" }
 
-  it { expect(solve("5_example.txt", true)).to eq "MCD" }
-  it { expect(solve("5_input.txt", true)).to eq "PWPWHGFZS" }
+  it { expect(solve("days/5_example.txt", true)).to eq "MCD" }
+  it { expect(solve("days/5_input.txt", true)).to eq "PWPWHGFZS" }
 end
