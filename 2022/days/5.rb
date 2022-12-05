@@ -1,5 +1,4 @@
 require_relative "../spec_helper"
-require "matrix"
 
 class DayFive < Day
   def solve(filename, crane=false)
@@ -55,5 +54,4 @@ class DayFive < Day
 
   it { expect(solve("5_example.txt", true)).to eq "MCD" }
   it { expect(solve("5_input.txt", true)).to eq "PWPWHGFZS" }
-
 end
