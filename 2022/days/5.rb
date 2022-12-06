@@ -15,18 +15,8 @@ class DayFive < Day
               .tr("[] ", "")
               .chars
           end
-          # flip the indexes
-          .reduce(nil) do |acc, slice|
-            acc = slice.length.times.map { [] } if acc.nil?
-
-            slice
-              .each
-              .with_index do |character, index|
-                acc[index].push character unless character == "-"
-              end
-
-            acc
-          end
+          .transpose
+          .map { |stack| stack.filter { _1 != "-" } }
           .map(&:reverse)
 
           # apply the instructions
