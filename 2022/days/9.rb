@@ -14,11 +14,6 @@ class DayNine < Day
     pairs = sneks.times.map { [0, 0] }
     visited = Set.new
     until instructions.none?
-      # print_state(pairs, 10, 10)
-      # p instructions
-      # p direction
-      # p visited
-      # sleep 0.1
       current_instruction = instructions.pop
 
       if current_instruction.is_a? String 
@@ -59,8 +54,6 @@ class DayNine < Day
     dist = distance(y_head, x_head, y_tail, x_tail)
     return [y_tail, x_tail] unless dist >= 2 
 
-    same_row = y_head == y_tail
-    same_column = x_head == x_tail
     increment_row = y_head > y_tail
     decrement_row = y_head < y_tail
     increment_column = x_head > x_tail
@@ -77,21 +70,6 @@ class DayNine < Day
 
   def distance(y1, x1, y2, x2)
     Math.sqrt((x1 - x2)**2 + (y1 - y2)**2)
-  end
-
-  def print_state(pairs, width, height)
-    grid = height.times.map { Array.new(width, ",") }
-    pairs
-      .each
-      .with_index do |(y, x), index|
-        if index == 0
-          grid[y][x] = "H"
-        else
-          grid[y][x] = index
-        end
-      end
-
-    puts grid.map(&:join).join("\n")
   end
 
   # part one
