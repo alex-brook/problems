@@ -4,19 +4,22 @@ class DayTwelve < Day
   LOWERCASE_A = 97
 
   # https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm#Pseudocode
-  def dijkstra(nodes, start, goal)
+  def dijkstra(nodes, starts, goal)
     prev = {}
   
     dist = Hash.new(Float::INFINITY)
-    dist[start] = 0
+    dist[goal] = 0
 
     q = MinHeap.new
-    q.insert(start, 0)
+    q.insert(goal, 0)
 
     until q.empty?
       current = q.extract
 
-      break if goal == current
+      if starts.any? { _1 == current }
+        start = current
+        break
+      end
 
       neighbours(nodes, current).each do |neighbour|
         alt = dist[current] + 1
@@ -32,18 +35,18 @@ class DayTwelve < Day
       end
     end
 
-    prev
+    walk(prev, start, goal)
   end
 
-  def part_one(prev, start, goal)
+  def walk(prev, start, goal)
     path = []
-    current = goal 
-    until current == start 
+    current = start
+    until current == goal 
       path << current
       current = prev[current]
     end
 
-    path = path.reverse
+    path
   end
 
   def part_two(nodes, prev, goal)
@@ -58,7 +61,7 @@ class DayTwelve < Day
   def neighbours(nodes, (row, col))
     [[row - 1, col], [row + 1, col], [row, col - 1], [row, col + 1]]
       .filter { |coords| nodes.key? coords }
-      .filter { |coords| nodes[coords] - nodes[[row, col]]  <= 1 }
+      .filter { |coords| nodes[[row, col]] - nodes[coords]  <= 1 }
   end
 
   def solve(filename, part=:one)
@@ -86,9 +89,17 @@ class DayTwelve < Day
           end
       end
 
-    part_one(dijkstra(nodes, start, goal), start, goal).size
+    if part == :one
+      dijkstra(nodes, [start], goal).size
+    elsif part == :two
+      starts = nodes.filter_map { |coords, elevation| coords if elevation == 0 }
+      dijkstra(nodes, starts, goal).size
+    end
   end
 
   it { expect(solve("days/12_example.txt")).to eq 31 }
   it { expect(solve("days/12_input.txt")).to eq 528 }
+
+  it { expect(solve("days/12_example.txt", :two)).to eq 29 }
+  it { expect(solve("days/12_input.txt", :two)).to eq 522 }
 end
