@@ -1,4 +1,7 @@
 class MinHeap
+  class ElementNotFound < StandardError; end
+  class ElementNotUnique < StandardError; end
+
   def initialize
     @tree = []
     @index = {}
@@ -6,10 +9,7 @@ class MinHeap
   end
 
   def insert(thing, priority)
-    if @index.key? thing
-      update(thing, priority)
-      return
-    end
+    raise(ElementNotUnique, "This element is already present, use #update") if @index.key? thing
 
     @tree.push(thing)
     @index[thing] = @tree.length - 1
@@ -18,6 +18,7 @@ class MinHeap
   end
 
   def extract
+    raise(ElementNotFound, "The heap is empty") if empty?
     swap(0, @tree.length - 1)
     temp = @tree.pop
     @index.delete temp
@@ -28,6 +29,7 @@ class MinHeap
   end
 
   def update(thing, priority)
+    raise(ElementNotFound, { thing:, keys: @index.keys}) unless @index.key? thing
     old_priority = @priority[thing]
 
     if compare(priority, old_priority)
@@ -36,6 +38,12 @@ class MinHeap
       bubble(@index[thing])
     end
   end
+
+  def empty? = @tree.empty?
+
+  def include?(thing) = @index.key? thing
+
+  def size = @tree.size
 
   protected
 
