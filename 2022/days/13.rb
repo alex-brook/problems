@@ -33,13 +33,26 @@ class DayThirteen < Day
     res
   end
 
+  def comparison
+    ->(a, b) { 
+      c = compare(a, b)
+      if c.nil?
+        0
+      elsif c
+        -1
+      else
+        1
+      end 
+    }
+  end
+
   def in_order?(l, r)
     comparison = compare(l, r)
 
     comparison || comparison.nil?
   end
 
-  def solve(filename)
+  def pairs(filename)
     File
       .readlines(filename, chomp: true)
       .chunk_while { _1 != "" }
@@ -48,10 +61,26 @@ class DayThirteen < Day
 
         pair.map { JSON.parse(_1) }
       end
+  end
+
+  def solve(filename)
+    pairs(filename)
       .each
       .with_index
       .filter_map { |(a,b), index|index + 1 if in_order?(a, b) }
       .sum
+  end
+
+  def solve_part_two(filename)
+    dividers = [[[2]], [[6]]]
+
+    (pairs(filename) + dividers)
+      .flatten(1)
+      .sort(&comparison)
+      .each
+      .with_index
+      .filter_map { |x, index| index + 1 if x == [2] || x == [6] }
+      .reduce(&:*)
   end
 
  it { expect(in_order?([], [])).to eq true }
@@ -67,4 +96,7 @@ class DayThirteen < Day
 
  it { expect(solve("days/13_example.txt")).to eq 13 }
  it { expect(solve("days/13_input.txt")).to eq 5684 }
+
+ it { expect(solve_part_two("days/13_example.txt")).to eq 140 }
+ it { expect(solve_part_two("days/13_input.txt")).to eq 22932 }
 end
