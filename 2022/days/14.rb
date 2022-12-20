@@ -5,7 +5,7 @@ class DayFourteen < Day
   AIR = "."
   SAND = "o"
 
-  def build(filename)
+  def build(filename, floor=true)
     starting_state = {
       map: Hash.new(AIR),
       lb_x: Float::INFINITY,
@@ -47,25 +47,19 @@ class DayFourteen < Day
 
         acc
       end
-  end
-
-  def draw(state)
-    ((state[:lb_y] - 5)..state[:ub_y])
-      .each do |y|
-        (state[:lb_x]..state[:ub_x])
-          .each do |x|
-            print state[:map][[x,y]]
-          end
-        puts
+      .then do |state|
+        next unless floor
+        
+        original_ub = state[:ub_y]
+        state[:map].default_proc = ->(hash, key) {
+          key.last == original_ub + 2 ? ROCK : AIR
+        }
+        state
       end
-    puts "sand: #{state[:sand]}"
-    puts
   end
 
   def fall(state, x=500, y=0)
     state[:map][[x,y]] = SAND
-   # draw(state)
-   # sleep 0.1 
 
     abyss = y > state[:ub_y]
     neighbours = [[x, y + 1], [x - 1, y + 1], [x + 1, y + 1]]
@@ -100,6 +94,19 @@ class DayFourteen < Day
     sand
   end
 
+  def solve_part_two(filename)
+    state = build(filename, true)
+    state[:ub_y] += 3
+    until state[:map][[500, 0]] == SAND do 
+      fall(state)
+    end
+
+    state[:sand]
+  end
+
   it { expect(solve("days/14_example.txt")).to eq 24 }
   it { expect(solve("days/14_input.txt")).to eq 888 }
+
+  it { expect(solve_part_two("days/14_example.txt")).to eq 93 }
+  it { expect(solve_part_two("days/14_input.txt")).to eq 26461 }
 end
