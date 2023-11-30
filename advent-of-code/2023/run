@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ] ; then
+  bundle exec ruby -e "require_relative 'spec_helper' ; Dir.glob('days/*.rb').each { require_relative _1 } " 
+else
+  bundle exec ruby $1
+fi
