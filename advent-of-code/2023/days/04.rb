@@ -3,9 +3,10 @@ require_relative "../spec_helper"
 class DayFour < Day
   def process(path)
     i = -1
+    copies = {}
     File
       .readlines(path, chomp: true)
-      .reduce([0, {}]) do |(acc, copies), line|
+      .reduce([0, 0]) do |(acc, count), line|
         i += 1
         copies[i] ||= 1
 
@@ -17,21 +18,13 @@ class DayFour < Day
         winners << line.shift until line.first == "|"
         line.shift
 
-        matches = line.reduce(0) do |matches, x|
-          if winners.include?(x)
-            matches + 1
-          else
-            matches
-          end 
-        end
+        matches = line.count { winners.include? _1 }
 
-        next [acc, copies] if matches.zero?
-        (1..matches).each do |j|
-          multiplier = copies[i]
-          copies[i + j] = (copies[i + j] || 1) + multiplier
-        end
+        next [acc, count + copies[i]] if matches.zero?
 
-        [acc + (2 ** (matches - 1)), copies]
+        matches.times { |j| copies[i + j + 1] = (copies[i + j + 1] || 1) + copies[i] }
+
+        [acc + (2 ** (matches - 1)), count + copies[i]]
       end
   end
 
@@ -42,7 +35,7 @@ class DayFour < Day
 
   def p2(...)
     _acc, copies = process(...)
-    copies.values.sum
+    copies
   end
 
   it { expect(p1("days/04_example.txt")).to eq(13) }
