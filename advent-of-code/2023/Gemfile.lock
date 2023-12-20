@@ -4,10 +4,13 @@ GEM
     diff-lcs (1.5.0)
     lazy_priority_queue (0.1.1)
     minitest (5.20.0)
+    rexml (3.2.6)
     rspec-expectations (3.12.3)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
     rspec-support (3.12.1)
+    ruby-graphviz (1.2.5)
+      rexml
 
 PLATFORMS
   x86_64-linux
@@ -16,6 +19,7 @@ DEPENDENCIES
   lazy_priority_queue
   minitest
   rspec-expectations
+  ruby-graphviz
 
 BUNDLED WITH
    2.4.22
